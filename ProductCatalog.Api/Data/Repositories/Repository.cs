@@ -18,7 +18,8 @@ public abstract class Repository<TEntity, TKey> where TEntity : class
     protected virtual async Task<IEnumerable<TEntity>> Get(
         Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-        Func<IQueryable<TEntity>, IQueryable<TEntity>>[]? includeFuncs = null)
+        Func<IQueryable<TEntity>, IQueryable<TEntity>>[]? includeFuncs = null,
+        CancellationToken ct = default)
     {
         IQueryable<TEntity> query = _dbSet;
 
@@ -37,17 +38,18 @@ public abstract class Repository<TEntity, TKey> where TEntity : class
 
         if (orderBy != null)
         {
-            return await orderBy(query).ToListAsync();
+            return await orderBy(query).ToListAsync(ct);
         }
 
-        return await query.ToListAsync();
+        return await query.ToListAsync(ct);
     }
 
-    public virtual async Task<TEntity?> GetById(TKey id) => await _dbSet.FindAsync(id);
+    public virtual async Task<TEntity?> GetById(TKey id, CancellationToken ct = default) 
+        => await _dbSet.FindAsync([id], ct);
 
-    public virtual async Task Delete(TKey id)
+    public virtual async Task DeleteAsync(TKey id, CancellationToken ct = default)
     {
-        TEntity? entity = await _dbSet.FindAsync(id);
+        TEntity? entity = await _dbSet.FindAsync([id], ct);
         if (entity == null)
         {
             return;
