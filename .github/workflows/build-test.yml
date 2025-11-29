@@ -1,0 +1,26 @@
+name: Build & Test
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup .Net
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: dotnet restore ProductCatalog.slnx
+
+      - name: Build project
+        run: dotnet build ProductCatalog.slnx --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test ProductCatalog.slnx --configuration Release --no-build
