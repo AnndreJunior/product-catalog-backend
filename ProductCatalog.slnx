@@ -3,4 +3,10 @@
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />
   </Folder>
+  <Folder Name="/src/">
+    <Project Path="ProductCatalog.Api/ProductCatalog.Api.csproj" Id="3d76d5f4-e0d7-4dbb-8503-4a037933af62" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="ProductCatalog.Tests/ProductCatalog.Tests.csproj" Id="fe306356-4a09-447b-8f0d-36f4b4459491" />
+  </Folder>
 </Solution>
